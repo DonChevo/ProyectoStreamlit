@@ -538,7 +538,18 @@ elif opcion == "Ejercicio 4":
             st.warning(f"¿Estás seguro de eliminar '{producto_a_eliminar}'? Esta acción vaciará el objeto de la memoria.")
             
             if st.button("Confirmar Eliminación Completa", type="primary"):
+                # 1. Guardamos el mensaje de éxito en el estado de la sesión antes de borrar el dato
+                st.session_state.mensaje_exito_delete = f"💥 El producto '{producto_a_eliminar}' ha sido removido permanentemente del inventario."
+                
+                # 2. Eliminación del elemento dentro de la colección estructural
                 del st.session_state.db_inventario[producto_a_eliminar]
-                st.success(f"El objeto '{producto_a_eliminar}' ha sido removido.")
+                
+                # 3. Forzamos el redibujado inmediato de la interfaz para actualizar los selectbox y tablas
                 st.rerun()
+
+        # Mostramos de forma persistente el mensaje tras el reinicio si existe en memoria
+        if "mensaje_exito_delete" in st.session_state:
+            st.success(st.session_state.mensaje_exito_delete)
+            # Limpiamos la variable para que el mensaje no se quede fijo en la pantalla
+            del st.session_state.mensaje_exito_delete
 
