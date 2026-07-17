@@ -38,8 +38,8 @@ if opcion == "Home":
         
         # Datos del Estudiante e Información General
         st.markdown("### 👤 Datos del Estudiante")
-        st.write("**Nombre Completo:** [Tu Nombre y Apellidos Completos]")
-        st.write("**Módulo:** Fundamentos Avanzados de Python")
+        st.write("**Nombre Completo:** JULIO CESAR RODRIGUEZ RODRIGUEZ")
+        st.write("**Módulo:** Fundamentos de Python")
         st.write("**Especialidad/Rol:** Desarrollador de Software / Analista de Datos")
         st.write("**Año:** 2026")
 
