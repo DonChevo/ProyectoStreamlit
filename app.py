@@ -13,9 +13,60 @@ opcion = st.sidebar.selectbox(
 # SECCIÓN: HOME
 # ==========================================
 if opcion == "Home":
-    st.title("👋 Bienvenido a mi Portafolio Interactivos de Python")
-    st.write("Esta aplicación interactiva sirve como evidencia de conceptos fundamentales de programación.")
-    st.write("Utiliza el menú de la izquierda para explorar los diferentes ejercicios prácticos desarrollados.")
+    # Título del proyecto
+    st.title("🚀 Desarrollo de Aplicaciones Interactivas con Streamlit")
+    st.subheader("Portafolio Profesional de Competencias en Python")
+    st.divider()
+
+    # Layout de dos columnas: Logo / Identificación | Información del Proyecto
+    col_Firma, col_Info = st.columns([1, 2], gap="large")
+
+    with col_Firma:
+        # Logo personal o de Python DMC (Opcional - Manejo de error si no existe el archivo)
+        try:
+            st.image("logo.png", width=250, caption="Python DMC - Proyecto Base")
+        except FileNotFoundError:
+            # Alternativa visual con st.markdown si no encuentran la imagen local de inmediato
+            st.markdown("### 🐍 [Logo Representativo]")
+            st.caption("(Coloca una imagen llamada 'logo.png' en la carpeta para visualizarla)")
+        
+        st.divider()
+        
+        # Datos del Estudiante e Información General
+        st.markdown("### 👤 Datos del Estudiante")
+        st.write("**Nombre Completo:** [Tu Nombre y Apellidos Completos]")
+        st.write("**Módulo:** Fundamentos Avanzados de Python")
+        st.write("**Especialidad/Rol:** Desarrollador de Software / Analista de Datos")
+        st.write("**Año:** 2026")
+
+    with col_Info:
+        # Breve descripción del proyecto
+        st.markdown("### 📝 Descripción del Proyecto")
+        st.write(
+            "Este proyecto consiste en una aplicación web interactiva diseñada para centralizar, "
+            "ejecutar y validar de forma práctica los pilares fundamentales del lenguaje Python. "
+            "A través de una arquitectura limpia y modular, el portafolio actúa como evidencia "
+            "de ingeniería de software, permitiendo al usuario interactuar en tiempo real con "
+            "algoritmos complejos, manipulación de datos y metodologías de programación avanzadas."
+        )
+        
+        # Tecnologías utilizadas
+        st.markdown("### 🛠️ Tecnologías Utilizadas")
+        st.markdown("""
+        * **Lenguaje Core:** Python 3.x
+        * **Framework de Interfaz:** Streamlit (UI Reactiva)
+        * **Estructuración:** Programación Estructurada, Funcional y Orientada a Objetos (POO)
+        """)
+        
+        # Cuadro de instrucciones generales
+        st.info(
+            "💡 **Guía de navegación:** Despliega el menú de la barra lateral izquierda "
+            "(`st.sidebar.selectbox`) para interactuar con los ejercicios del 1 al 4 "
+            "y evaluar los conceptos técnicos implementados."
+        )
+
+    st.divider()
+
 
 # ==========================================
 # SECCIÓN: EJERCICIO 1
