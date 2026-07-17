@@ -261,11 +261,122 @@ elif opcion == "Ejercicio 2":
 
 
 # ==========================================
-# SECCIÓN: EJERCICIO 3
+# SECCIÓN: EJERCICIO 3 - LIBRERÍA EXTERNA
 # ==========================================
 elif opcion == "Ejercicio 3":
-    st.title("⚙️ Ejercicio 3")
-    st.info("Esperando pautas para el desarrollo de esta sección...")
+    import pandas as pd
+    import datetime
+    
+    # Intento de importación nativa de la librería externa en GitHub
+    try:
+        import libreria_funciones_proyecto1 as lib
+    except ModuleNotFoundError:
+        # Respaldo de contingencia local en caso de que el archivo aún no sincronice en el servidor
+        class Contingencia:
+            @staticmethod
+            def valor_futuro_inversion(capital_inicial, aporte_mensual, tasa_anual, anios):
+                tasa_mensual = tasa_anual / 12
+                meses = anios * 12
+                if tasa_mensual == 0: return capital_inicial + (aporte_mensual * meses)
+                v_cap = capital_inicial * (1 + tasa_mensual) ** meses
+                v_ap = aporte_mensual * (((1 + tasa_mensual) ** meses - 1) / tasa_mensual)
+                return v_cap + v_ap
+        lib = Contingencia()
+
+    st.title("⚙️ Ejercicio 3: Simulación Financiera - Librería Externa")
+    
+    # Descripción del ejercicio con st.markdown()
+    st.markdown("""
+    Este módulo se conecta directamente con el archivo externo `libreria_funciones_proyecto1.py`. 
+    Hemos seleccionado la función **`valor_futuro_inversion`** para calcular la proyección estimada de un capital 
+    con interés compuesto y aportaciones mensuales indexadas a lo largo de un período de años determinado.
+    """)
+    st.divider()
+
+    # Selector de función (Requerimiento de la pauta)
+    funcion_seleccionada = st.selectbox(
+        "Función del sistema conectada:",
+        ["valor_futuro_inversion (Cálculo de Proyección y Capitalización)"]
+    )
+
+    # Inicialización del almacenamiento histórico en st.session_state
+    if "historico_inversiones" not in st.session_state:
+        st.session_state.historico_inversiones = []
+
+    # Layout de la interfaz: Formulario de entrada | Salidas e Historial
+    col_params, col_resultados = st.columns(, gap="large")
+
+    with col_params:
+        st.subheader("📥 Parámetros de la Inversión")
+        
+        # Widgets para ingresar parámetros de la función seleccionada
+        nombre_simulacion = st.text_input("Etiqueta de la simulación:", placeholder="Ej. Fondo de Emergencia, Plan Retiro")
+        capital_inicial = st.number_input("Capital Inicial ($):", min_value=0.0, value=1000.0, step=100.0, format="%.2f")
+        aporte_mensual = st.number_input("Aporte Mensual Continuo ($):", min_value=0.0, value=100.0, step=10.0, format="%.2f")
+        
+        # La función espera la tasa anual en decimal, pero el usuario interactúa mejor en porcentaje (0-100%)
+        tasa_interes_pct = st.number_input("Tasa de Interés Anual (Ej: ingresa 8.5 para 8.5%):", min_value=0.0, max_value=100.0, value=8.5, step=0.1)
+        anios = st.number_input("Horizonte de Tiempo (Años):", min_value=1, max_value=50, value=5, step=1)
+
+        # Botón para ejecutar
+        btn_calcular = st.button("Ejecutar Simulación", use_container_width=True)
+
+        if btn_calcular:
+            if nombre_simulacion.strip() == "":
+                st.warning("⚠️ Por favor, ingresa una etiqueta para identificar la simulación.")
+            else:
+                # Conversión de tasa porcentual a tasa decimal esperada por la función original
+                tasa_decimal = tasa_interes_pct / 100
+                
+                # Ejecución de la función desde la librería externa
+                monto_final = lib.valor_futuro_inversion(capital_inicial, aporte_mensual, tasa_decimal, int(anios))
+                
+                # Guardado en el registro histórico
+                nuevo_registro = {
+                    "Fecha Cálculo": datetime.datetime.now().strftime("%H:%M:%S"),
+                    "Inversión": nombre_simulacion,
+                    "Capital Inicial": f"${capital_inicial:,.2f}",
+                    "Aporte Mensual": f"${aporte_mensual:,.2f}",
+                    "Tasa Anual": f"{tasa_interes_pct}%",
+                    "Años": int(anios),
+                    "Valor Futuro": monto_final # Guardamos el flotante nativo para la tabla y métricas
+                }
+                st.session_state.historico_inversiones.append(nuevo_registro)
+                st.success("¡Cálculo ejecutado exitosamente!")
+
+    with col_resultados:
+        st.subheader("🎯 Resultado en Pantalla")
+        
+        if st.session_state.historico_inversiones:
+            ultimo_calculo = st.session_state.historico_inversiones[-1]
+            
+            # Formateo de métrica para la visualización del resultado
+            st.info(f"Proyección calculada para: **{ultimo_calculo['Inversión']}**")
+            st.metric(
+                label="Valor Futuro Estimado", 
+                value=f"${ultimo_calculo['Valor Futuro']:,.2f}"
+            )
+        else:
+            st.write("Configura los parámetros del panel izquierdo y presiona el botón para procesar la información.")
+            
+        st.write("---")
+        
+        # Tabla histórica de resultados obtenidos (DataFrame)
+        st.subheader("📋 Histórico de Escenarios Evaluados")
+        if not st.session_state.historico_inversiones:
+            st.caption("No se registran simulaciones previas en la sesión actual.")
+        else:
+            # Formateamos el DataFrame para mostrar el dinero de forma legible antes de renderizar
+            df_historico = pd.DataFrame(st.session_state.historico_inversiones)
+            df_mostrar = df_historico.copy()
+            df_mostrar["Valor Futuro"] = df_mostrar["Valor Futuro"].apply(lambda x: f"${x:,.2f}")
+            
+            st.dataframe(df_mostrar, use_container_width=True, hide_index=True)
+            
+            if st.button("Restablecer Historial"):
+                st.session_state.historico_inversiones = []
+                st.rerun()
+
 
 # ==========================================
 # SECCIÓN: EJERCICIO 4
