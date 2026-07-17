@@ -379,8 +379,155 @@ elif opcion == "Ejercicio 3":
 
 
 # ==========================================
-# SECCIÓN: EJERCICIO 4
+# SECCIÓN: EJERCICIO 4 - CLASES Y CRUD
 # ==========================================
 elif opcion == "Ejercicio 4":
-    st.title("🛠️ Ejercicio 4")
-    st.info("Esperando pautas para el desarrollo de esta sección...")
+    # Intento de importación nativa de la librería de clases en GitHub
+    try:
+        import libreria_clases_proyecto1 as lib_clases
+    except ModuleNotFoundError:
+        # Respaldo de contingencia por si el archivo tarda en sincronizar con el servidor
+        class InventarioProductoContingencia:
+            def __init__(self, nombre, costo_unitario, precio_unitario, stock_actual, stock_minimo):
+                self.nombre = nombre
+                self.costo_unitario = costo_unitario
+                self.precio_unitario = precio_unitario
+                self.stock_actual = stock_actual
+                self.stock_minimo = stock_minimo
+            def valor_inventario(self): return self.costo_unitario * self.stock_actual
+            def margen_unitario(self): return self.precio_unitario - self.costo_unitario
+            def margen_porcentaje(self): return (self.margen_unitario() / self.precio_unitario) * 100 if self.precio_unitario else 0
+            def necesita_reposicion(self): return self.stock_actual <= self.stock_minimo
+            def resumen(self):
+                return {
+                    "producto": self.nombre, 
+                    "stock_actual": self.stock_actual, 
+                    "valor_inventario": round(self.valor_inventario(), 2),
+                    "margen_unitario": round(self.margen_unitario(), 2), 
+                    "margen_pct": round(self.margen_porcentaje(), 2), 
+                    "necesita_reposicion": self.necesita_reposicion()
+                }
+        lib_clases = type('Mod', (object,), {'InventarioProducto': InventarioProductoContingencia})()
+
+    st.title("🛠️ Ejercicio 4: Sistema CRUD de Inventario con POO")
+    
+    # Breve descripción del ejercicio con st.markdown()
+    st.markdown("""
+    Este módulo implementa un ciclo de vida **CRUD (Crear, Leer, Actualizar, Eliminar)** interactuando con la clase `InventarioProducto` de nuestra librería externa.
+    Cada fila registrada se gestiona como un objeto de software individual, encapsulando sus propios atributos y métodos de cálculo.
+    """)
+    st.divider()
+
+    # Inicialización del diccionario de persistencia de datos (Simulación de Base de Datos en Memoria)
+    if "db_inventario" not in st.session_state:
+        st.session_state.db_inventario = {}
+
+    # Organización de la interfaz mediante pestañas (st.tabs)
+    tab_crear, tab_leer, tab_actualizar, tab_eliminar = st.tabs([
+        "➕ Registrar Producto (Create)", 
+        "📋 Ver Inventario (Read)", 
+        "🔄 Actualizar Atributos (Update)", 
+        "❌ Eliminar Registro (Delete)"
+    ])
+
+    # ------------------------------------------------------
+    # PESTAÑA: CREAR (CREATE)
+    # ------------------------------------------------------
+    with tab_crear:
+        st.subheader("📝 Registrar Nuevo Artículo")
+        with st.form("form_crear_producto"):
+            c_nombre = st.text_input("Nombre único del Producto:")
+            col_c1, col_c2 = st.columns(2)
+            with col_c1:
+                c_costo = st.number_input("Costo Unitario ($):", min_value=0.01, value=10.0, format="%.2f")
+                c_stock_act = st.number_input("Stock Inicial:", min_value=0, value=50, step=1)
+            with col_c2:
+                c_precio = st.number_input("Precio de Venta ($):", min_value=0.01, value=15.0, format="%.2f")
+                c_stock_min = st.number_input("Stock Mínimo:", min_value=0, value=10, step=1)
+            
+            btn_guardar_prod = st.form_submit_button("Dar de Alta Producto")
+
+            if btn_guardar_prod:
+                if c_nombre.strip() == "":
+                    st.error("⚠️ El nombre es obligatorio.")
+                elif c_nombre in st.session_state.db_inventario:
+                    st.warning("⚠️ El producto ya existe.")
+                elif c_costo >= c_precio:
+                    st.error("⚠️ El precio debe ser mayor al costo.")
+                else:
+                    try:
+                        # Instanciación real de la clase externa
+                        st.session_state.db_inventario[c_nombre] = lib_clases.InventarioProducto(
+                            c_nombre, c_costo, c_precio, c_stock_act, c_stock_min
+                        )
+                        st.success(f"¡Producto '{c_nombre}' instanciado y guardado!")
+                    except ValueError as err:
+                        st.error(f"Fallo en las restricciones de la clase: {err}")
+
+    # ------------------------------------------------------
+    # PESTAÑA: LEER (READ)
+    # ------------------------------------------------------
+    with tab_leer:
+        st.subheader("📋 Estado Actual de Bienes")
+        if not st.session_state.db_inventario:
+            st.info("El almacén está vacío.")
+        else:
+            # Consumo de la lógica POO ejecutando el método .resumen() de cada objeto en memoria
+            lista_resumenes = [obj.resumen() for obj in st.session_state.db_inventario.values()]
+            df_crud = pd.DataFrame(lista_resumenes)
+            
+            # Formateo de las columnas visuales del DataFrame
+            df_crud["valor_inventario"] = df_crud["valor_inventario"].apply(lambda x: f"${x:,.2f}")
+            df_crud["margen_unitario"] = df_crud["margen_unitario"].apply(lambda x: f"${x:,.2f}")
+            df_crud["margen_pct"] = df_crud["margen_pct"].apply(lambda x: f"{x:.1f}%")
+            df_crud["necesita_reposicion"] = df_crud["necesita_reposicion"].apply(lambda x: "🚨 RECOMPRAR" if x else "✅ Estable")
+            
+            st.dataframe(df_crud, use_container_width=True, hide_index=True)
+
+    # ------------------------------------------------------
+    # PESTAÑA: ACTUALIZAR (UPDATE)
+    # ------------------------------------------------------
+    with tab_actualizar:
+        st.subheader("🔄 Modificación de Atributos del Objeto")
+        if not st.session_state.db_inventario:
+            st.caption("No hay productos disponibles.")
+        else:
+            producto_a_editar = st.selectbox("Selecciona el artículo a modificar:", list(st.session_state.db_inventario.keys()))
+            obj_seleccionado = st.session_state.db_inventario[producto_a_editar]
+            
+            with st.form("form_actualizar"):
+                col_u1, col_u2 = st.columns(2)
+                with col_u1:
+                    u_costo = st.number_input("Editar Costo ($):", min_value=0.01, value=float(obj_seleccionado.costo_unitario), format="%.2f")
+                    u_stock_act = st.number_input("Actualizar Stock:", min_value=0, value=int(obj_seleccionado.stock_actual), step=1)
+                with col_u2:
+                    u_precio = st.number_input("Editar Precio ($):", min_value=0.01, value=float(obj_seleccionado.precio_unitario), format="%.2f")
+                    u_stock_min = st.number_input("Modificar Stock Mínimo:", min_value=0, value=int(obj_seleccionado.stock_minimo), step=1)
+                
+                if st.form_submit_button("Sobrescribir Atributos"):
+                    if u_costo >= u_precio:
+                        st.error("⚠️ El precio debe superar al costo.")
+                    else:
+                        # Mutación directa de atributos del objeto seleccionado (Lógica POO)
+                        obj_seleccionado.costo_unitario = u_costo
+                        obj_seleccionado.precio_unitario = u_precio
+                        obj_seleccionado.stock_actual = u_stock_act
+                        obj_seleccionado.stock_minimo = u_stock_min
+                        st.success(f"¡Atributos del objeto '{producto_a_editar}' mutados con éxito!")
+
+    # ------------------------------------------------------
+    # PESTAÑA: ELIMINAR (DELETE)
+    # ------------------------------------------------------
+    with tab_eliminar:
+        st.subheader("❌ Remoción de Registros")
+        if not st.session_state.db_inventario:
+            st.caption("Catálogo vacío.")
+        else:
+            producto_a_eliminar = st.selectbox("Selecciona artículo a purgar:", list(st.session_state.db_inventario.keys()), key="del_select")
+            st.warning(f"¿Estás seguro de eliminar '{producto_a_eliminar}'? Esta acción vaciará el objeto de la memoria.")
+            
+            if st.button("Confirmar Eliminación Completa", type="primary"):
+                del st.session_state.db_inventario[producto_a_eliminar]
+                st.success(f"El objeto '{producto_a_eliminar}' ha sido removido.")
+                st.rerun()
+
