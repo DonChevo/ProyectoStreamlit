@@ -304,7 +304,7 @@ elif opcion == "Ejercicio 3":
         st.session_state.historico_inversiones = []
 
     # Layout de la interfaz: Formulario de entrada | Salidas e Historial
-    col_params, col_resultados = st.columns(, gap="large")
+    col_params, col_resultados = st.columns(2, gap="large")
 
     with col_params:
         st.subheader("📥 Parámetros de la Inversión")
