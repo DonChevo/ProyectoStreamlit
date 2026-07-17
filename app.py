@@ -22,13 +22,17 @@ if opcion == "Home":
     col_Firma, col_Info = st.columns([1, 2], gap="large")
 
     with col_Firma:
-        # Logo personal o de Python DMC (Opcional - Manejo de error si no existe el archivo)
-        try:
-            st.image("logo.png", width=250, caption="Python DMC - Proyecto Base")
-        except FileNotFoundError:
-            # Alternativa visual con st.markdown si no encuentran la imagen local de inmediato
+        # Verificación segura de la existencia de la imagen
+        import os
+        
+        ruta_logo = "logo.png"
+        if os.path.exists(ruta_logo):
+            st.image(ruta_logo, width=250, caption="Python DMC - Proyecto Base")
+        else:
+            # Alternativa visual limpia si el archivo aún no está en la carpeta
             st.markdown("### 🐍 [Logo Representativo]")
-            st.caption("(Coloca una imagen llamada 'logo.png' en la carpeta para visualizarla)")
+            st.caption("(Sugerencia: Coloca una imagen llamada 'logo.png' en la raíz del proyecto)")
+
         
         st.divider()
         
