@@ -382,6 +382,7 @@ elif opcion == "Ejercicio 3":
 # SECCIÓN: EJERCICIO 4 - CLASES Y CRUD
 # ==========================================
 elif opcion == "Ejercicio 4":
+    import pandas as pd
     # Intento de importación nativa de la librería de clases en GitHub
     try:
         import libreria_clases_proyecto1 as lib_clases
