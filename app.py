@@ -73,11 +73,93 @@ if opcion == "Home":
 
 
 # ==========================================
-# SECCIÓN: EJERCICIO 1
+# SECCIÓN: EJERCICIO 1 - FLUJO DE CAJA
 # ==========================================
 elif opcion == "Ejercicio 1":
-    st.title("📝 Ejercicio 1")
-    st.info("Esperando pautas para el desarrollo de esta sección...")
+    st.title("💰 Ejercicio 1: Registro de Flujo de Caja")
+    
+    # Descripción del ejercicio
+    st.markdown("""
+    Este módulo permite registrar movimientos financieros de manera dinámica en una lista. 
+    A través de la interacción con los elementos de la interfaz, el sistema calcula de forma automática 
+    el total de ingresos, gastos y el saldo final neto, determinando el estado actual de tu flujo de caja.
+    """)
+    st.divider()
+
+    # Inicialización del estado de la sesión para preservar la lista de movimientos
+    if "movimientos" not in st.session_state:
+        st.session_state.movimientos = []
+
+    # Layout: Formulario de entrada de datos | Visualización y Métricas
+    col_formulario, col_resultados = st.columns([1, 2], gap="large")
+
+    with col_formulario:
+        st.subheader("📝 Registrar Movimiento")
+        
+        # Widgets para ingresar los datos del flujo
+        concepto = st.text_input("Concepto del movimiento:", placeholder="Ej. Pago de Alquiler, Salario, Almuerzo")
+        tipo_movimiento = st.selectbox("Tipo de movimiento:", ["Ingreso", "Gasto"])
+        
+        # Controlamos que el valor ingresado sea siempre positivo
+        valor = st.number_input("Monto / Valor ($):", min_value=0.0, step=10.0, format="%.2f")
+        
+        # Botón para agregar movimientos
+        btn_agregar = st.button("Agregar Movimiento", use_container_width=True)
+
+        if btn_agregar:
+            if concepto.strip() == "":
+                st.warning("⚠️ Por favor, ingresa un concepto válido.")
+            elif valor <= 0:
+                st.warning("⚠️ El monto debe ser mayor a cero.")
+            else:
+                # Creación del registro como diccionario y adición a la lista del estado
+                nuevo_movimiento = {
+                    "Concepto": concepto,
+                    "Tipo": tipo_movimiento,
+                    "Valor": valor
+                }
+                st.session_state.movimientos.append(nuevo_movimiento)
+                st.success("¡Movimiento registrado con éxito!")
+
+        # Botón opcional para limpiar el historial y reiniciar la lista vacía
+        if st.button("Limpiar Historial"):
+            st.session_state.movimientos = []
+            st.rerun()
+
+    with col_resultados:
+        st.subheader("📊 Análisis del Flujo")
+
+        if not st.session_state.movimientos:
+            st.info("Aún no se han registrado movimientos. Usa el formulario de la izquierda para comenzar.")
+        else:
+            # 1. Cálculo de totales utilizando lógica estructurada de Python
+            total_ingresos = sum(m["Valor"] for m in st.session_state.movimientos if m["Tipo"] == "Ingreso")
+            total_gastos = sum(m["Valor"] for m in st.session_state.movimientos if m["Tipo"] == "Gasto")
+            saldo_final = total_ingresos - total_gastos
+
+            # 2. Despliegue de métricas financieras (st.metric)
+            m_col1, m_col2, m_col3 = st.columns(3)
+            with m_col1:
+                st.metric("Total Ingresos", f"${total_ingresos:,.2f}")
+            with m_col2:
+                st.metric("Total Gastos", f"${total_gastos:,.2f}", delta=f"-${total_gastos:,.2f}", delta_color="inverse")
+            with m_col3:
+                st.metric("Saldo Final", f"${saldo_final:,.2f}")
+
+            st.write("---")
+
+            # 3. Indicador del estado del flujo de caja (A favor / En contra)
+            if saldo_final >= 0:
+                st.success(f"🟢 **Flujo de caja a favor:** Cuentas con un superávit neto de **${saldo_final:,.2f}**.")
+            else:
+                st.error(f"🔴 **Flujo de caja en contra:** Tienes un déficit neto de **${abs(saldo_final):,.2f}**.")
+
+            st.write("---")
+            
+            # 4. Tabla de movimientos registrados (st.dataframe)
+            st.markdown("##### 📋 Listado de Movimientos Registrados")
+            st.dataframe(st.session_state.movimientos, use_container_width=True)
+
 
 # ==========================================
 # SECCIÓN: EJERCICIO 2
