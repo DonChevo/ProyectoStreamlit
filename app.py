@@ -162,11 +162,103 @@ elif opcion == "Ejercicio 1":
 
 
 # ==========================================
-# SECCIÓN: EJERCICIO 2
+# SECCIÓN: EJERCICIO 2 - REGISTRO CON NUMPY
 # ==========================================
 elif opcion == "Ejercicio 2":
-    st.title("📊 Ejercicio 2")
-    st.info("Esperando pautas para el desarrollo de esta sección...")
+    import numpy as np
+    import pandas as pd
+
+    st.title("📦 Ejercicio 2: Inventario y Ventas con NumPy")
+    
+    # Descripción del ejercicio
+    st.markdown("""
+    Este módulo gestiona el registro de productos utilizando vectores unidimensionales de **NumPy**. 
+    Cada campo del formulario alimenta un arreglo independiente. Al presionar el botón, 
+    estos vectores se consolidan matemáticamente y se transforman en un DataFrame reactivo para su visualización.
+    """)
+    st.divider()
+
+    # Inicialización del estado de la sesión para los arreglos de NumPy
+    if "np_nombres" not in st.session_state:
+        st.session_state.np_nombres = np.array([], dtype=str)
+        st.session_state.np_categorias = np.array([], dtype=str)
+        st.session_state.np_precios = np.array([], dtype=float)
+        st.session_state.np_cantidades = np.array([], dtype=int)
+        st.session_state.np_totales = np.array([], dtype=float)
+
+    # Layout de la interfaz: Formulario | Visualización del Inventario
+    col_form, col_tabla = st.columns([1, 2], gap="large")
+
+    with col_form:
+        st.subheader("➕ Registro de Producto")
+        
+        # Widgets para ingresar datos
+        nombre_prod = st.text_input("Nombre del producto:", placeholder="Ej. Laptop, Teclado, Monitor")
+        categoria_prod = st.selectbox("Categoría:", ["Electrónica", "Oficina", "Hogar", "Otros"])
+        precio_prod = st.number_input("Precio Unitario ($):", min_value=0.0, step=0.5, format="%.2f")
+        cantidad_prod = st.number_input("Cantidad:", min_value=1, step=1)
+        
+        # Cálculo automático del total del registro actual
+        total_prod = precio_prod * cantidad_prod
+        st.caption(f"**Total calculado para este registro:** ${total_prod:,.2f}")
+
+        # Botón para agregar nuevo registro
+        btn_agregar_prod = st.button("Agregar a Inventario", use_container_width=True)
+
+        if btn_agregar_prod:
+            if nombre_prod.strip() == "":
+                st.warning("⚠️ El nombre del producto no puede estar vacío.")
+            elif precio_prod <= 0:
+                st.warning("⚠️ El precio debe ser mayor a cero.")
+            else:
+                # Concatenación de nuevos elementos en los arreglos de NumPy correspondientes
+                st.session_state.np_nombres = np.append(st.session_state.np_nombres, nombre_prod)
+                st.session_state.np_categorias = np.append(st.session_state.np_categorias, categoria_prod)
+                st.session_state.np_precios = np.append(st.session_state.np_precios, precio_prod)
+                st.session_state.np_cantidades = np.append(st.session_state.np_cantidades, cantidad_prod)
+                st.session_state.np_totales = np.append(st.session_state.np_totales, total_prod)
+                st.success(f"¡{nombre_prod} añadido correctamente!")
+
+        # Botón para resetear los arreglos de NumPy
+        if st.button("Vaciar Inventario"):
+            st.session_state.np_nombres = np.array([], dtype=str)
+            st.session_state.np_categorias = np.array([], dtype=str)
+            st.session_state.np_precios = np.array([], dtype=float)
+            st.session_state.np_cantidades = np.array([], dtype=int)
+            st.session_state.np_totales = np.array([], dtype=float)
+            st.st.rerun()
+
+    with col_tabla:
+        st.subheader("📋 Tabla en DataFrame Actualizada")
+
+        # Control de flujo: validar si el arreglo tiene elementos creados
+        if len(st.session_state.np_nombres) == 0:
+            st.info("El inventario está vacío. Ingresa datos en el formulario para generar los arreglos de NumPy.")
+        else:
+            # Construcción del DataFrame a partir de la estructura de diccionarios alimentada por NumPy
+            df_inventario = pd.DataFrame({
+                "Producto": st.session_state.np_nombres,
+                "Categoría": st.session_state.np_categorias,
+                "Precio Unitario": st.session_state.np_precios,
+                "Cantidad": st.session_state.np_cantidades,
+                "Total General": st.session_state.np_totales
+            })
+
+            # Mostrar la tabla en DataFrame actualizada de forma interactiva
+            st.dataframe(df_inventario, use_container_width=True, hide_index=True)
+
+            # Métricas analíticas complementarias usando funciones de NumPy en el DataFrame
+            st.write("---")
+            st.markdown("##### 📈 Resumen Estadístico (Operaciones NumPy)")
+            
+            c1, c2 = st.columns(2)
+            with c1:
+                suma_totales = np.sum(st.session_state.np_totales)
+                st.metric("Inversión Total en Inventario", f"${suma_totales:,.2f}")
+            with c2:
+                promedio_precio = np.mean(st.session_state.np_precios)
+                st.metric("Precio Promedio de Productos", f"${promedio_precio:,.2f}")
+
 
 # ==========================================
 # SECCIÓN: EJERCICIO 3
