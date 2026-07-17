@@ -509,12 +509,22 @@ elif opcion == "Ejercicio 4":
                     if u_costo >= u_precio:
                         st.error("⚠️ El precio debe superar al costo.")
                     else:
-                        # Mutación directa de atributos del objeto seleccionado (Lógica POO)
+                        # 1. Mutación directa de atributos en memoria
                         obj_seleccionado.costo_unitario = u_costo
                         obj_seleccionado.precio_unitario = u_precio
                         obj_seleccionado.stock_actual = u_stock_act
                         obj_seleccionado.stock_minimo = u_stock_min
-                        st.success(f"¡Atributos del objeto '{producto_a_editar}' mutados con éxito!")
+                        
+                        # 2. Guardamos un mensaje temporal para mostrarlo tras el reinicio
+                        st.session_state.mensaje_exito_update = f"¡Atributos de '{producto_a_editar}' actualizados con éxito!"
+                        
+                        # 3. Forzamos el redibujado inmediato de toda la interfaz
+                        st.rerun()
+
+            # Mostramos el mensaje de éxito guardado si existe
+            if "mensaje_exito_update" in st.session_state:
+                st.success(st.session_state.mensaje_exito_update)
+                del st.session_state.mensaje_exito_update
 
     # ------------------------------------------------------
     # PESTAÑA: ELIMINAR (DELETE)
