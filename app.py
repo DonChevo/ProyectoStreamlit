@@ -49,8 +49,8 @@ if opcion == "Home":
         st.write(
             "Esta es una aplicación interactiva diseñada para demostrar el dominio de los fundamentos de "
             "Python. A través de una interfaz visual limpia y amigable, la app unifica conceptos clave del "
-            "lenguaje —desde variables y estructuras de datos hasta programación funcional y orientada a "
-            "objetos (POO)— en herramientas prácticas y funcionales que el usuario puede probar en "
+            "lenguaje desde variables y estructuras de datos hasta programación funcional y orientada a "
+            "objetos (POO) en herramientas prácticas y funcionales que el usuario puede probar en "
             "tiempo real."
         )
         
