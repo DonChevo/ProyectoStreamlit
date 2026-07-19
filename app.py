@@ -337,7 +337,7 @@ elif opcion == "Ejercicio 3":
                 
                 # Guardado en el registro histórico
                 nuevo_registro = {
-                    "Fecha Cálculo": datetime.datetime.now().strftime("%d:%m:%Y"),
+                    "Fecha Cálculo": datetime.datetime.now().strftime("%d-%m-%Y"),
                     "Inversión": nombre_simulacion,
                     "Capital Inicial": f"${capital_inicial:,.2f}",
                     "Aporte Mensual": f"${aporte_mensual:,.2f}",
