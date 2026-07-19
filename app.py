@@ -25,7 +25,7 @@ if opcion == "Home":
         # Verificación segura de la existencia de la imagen
         import os
         
-        ruta_logo = "logo.png"
+        ruta_logo = "LogoDMC.png"
         if os.path.exists(ruta_logo):
             st.image(ruta_logo, width=250, caption="Python DMC - Proyecto Base")
         else:
