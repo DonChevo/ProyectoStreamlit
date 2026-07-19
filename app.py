@@ -1,4 +1,8 @@
 import streamlit as st
+import numpy as np
+import os
+import pandas as pd
+import datetime
 
 # Configuración de la página
 st.set_page_config(page_title="Portafolio de Python", page_icon="🐍", layout="wide")
@@ -23,7 +27,7 @@ if opcion == "Home":
 
     with col_Firma:
         # Verificación segura de la existencia de la imagen
-        import os
+        # import os
         
         ruta_logo = "LogoDMC.png"
         if os.path.exists(ruta_logo):
