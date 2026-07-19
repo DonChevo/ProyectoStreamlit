@@ -169,8 +169,8 @@ elif opcion == "Ejercicio 1":
 # SECCIÓN: EJERCICIO 2 - REGISTRO CON NUMPY
 # ==========================================
 elif opcion == "Ejercicio 2":
-    import numpy as np
-    import pandas as pd
+    # import numpy as np
+    # import pandas as pd
 
     st.title("📦 Ejercicio 2: Inventario y Ventas con NumPy")
     
@@ -268,8 +268,8 @@ elif opcion == "Ejercicio 2":
 # SECCIÓN: EJERCICIO 3 - LIBRERÍA EXTERNA
 # ==========================================
 elif opcion == "Ejercicio 3":
-    import pandas as pd
-    import datetime
+    # import pandas as pd
+    # import datetime
     
     # Intento de importación nativa de la librería externa en GitHub
     try:
@@ -386,7 +386,7 @@ elif opcion == "Ejercicio 3":
 # SECCIÓN: EJERCICIO 4 - CLASES Y CRUD
 # ==========================================
 elif opcion == "Ejercicio 4":
-    import pandas as pd
+    # import pandas as pd
     # Intento de importación nativa de la librería de clases en GitHub
     try:
         import libreria_clases_proyecto1 as lib_clases
