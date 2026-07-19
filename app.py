@@ -269,7 +269,7 @@ elif opcion == "Ejercicio 3":
     
     # Intento de importación nativa de la librería externa en GitHub
     try:
-        import libreria_funciones_proyecto1 as lib
+        import libreria_funciones as lib
     except ModuleNotFoundError:
         # Respaldo de contingencia local en caso de que el archivo aún no sincronice en el servidor
         class Contingencia:
