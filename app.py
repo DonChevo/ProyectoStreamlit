@@ -287,7 +287,7 @@ elif opcion == "Ejercicio 3":
     
     # Descripción del ejercicio con st.markdown()
     st.markdown("""
-    Este módulo se conecta directamente con el archivo externo `libreria_funciones_proyecto1.py`. 
+    Este módulo se conecta directamente con el archivo externo `libreria_funciones.py`. 
     Se ha seleccionado la función **`valor_futuro_inversion`** para calcular la proyección estimada de un capital 
     con interés compuesto y aportaciones mensuales indexadas a lo largo de un período de años determinado.
     """)
@@ -388,7 +388,7 @@ elif opcion == "Ejercicio 4":
         import libreria_clases_proyecto1 as lib_clases
     except ModuleNotFoundError:
         # Respaldo de contingencia por si el archivo tarda en sincronizar con el servidor
-        class InventarioProductoContingencia:
+        class InventarioProducto:
             def __init__(self, nombre, costo_unitario, precio_unitario, stock_actual, stock_minimo):
                 self.nombre = nombre
                 self.costo_unitario = costo_unitario
@@ -415,7 +415,7 @@ elif opcion == "Ejercicio 4":
     # Breve descripción del ejercicio con st.markdown()
     st.markdown("""
     Este módulo implementa un ciclo de vida **CRUD (Crear, Leer, Actualizar, Eliminar)** interactuando con la clase `InventarioProducto` 
-    de la librería externa `libreria_funciones_proyecto1.py`. Cada fila registrada se gestiona como un objeto de software individual, 
+    de la librería externa `libreria_clases_proyecto1.py`. Cada fila registrada se gestiona como un objeto de software individual, 
     encapsulando sus propios atributos y métodos de cálculo.
     """)
     st.divider()
