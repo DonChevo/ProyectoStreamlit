@@ -14,7 +14,7 @@ opcion = st.sidebar.selectbox(
 # ==========================================
 if opcion == "Home":
     # Título del proyecto
-    st.title("🚀 Desarrollo de Aplicaciones Interactivas con Streamlit")
+    st.title("🚀 Desarrollo de Aplicaciones con Streamlit")
     st.subheader("Portafolio Profesional de Competencias en Python")
     st.divider()
 
@@ -283,12 +283,12 @@ elif opcion == "Ejercicio 3":
                 return v_cap + v_ap
         lib = Contingencia()
 
-    st.title("⚙️ Ejercicio 3: Simulación Financiera - Librería Externa")
+    st.title("⚙️ Ejercicio 3: Simulación Financiera")
     
     # Descripción del ejercicio con st.markdown()
     st.markdown("""
     Este módulo se conecta directamente con el archivo externo `libreria_funciones_proyecto1.py`. 
-    Hemos seleccionado la función **`valor_futuro_inversion`** para calcular la proyección estimada de un capital 
+    Se ha seleccionado la función **`valor_futuro_inversion`** para calcular la proyección estimada de un capital 
     con interés compuesto y aportaciones mensuales indexadas a lo largo de un período de años determinado.
     """)
     st.divider()
@@ -414,8 +414,9 @@ elif opcion == "Ejercicio 4":
     
     # Breve descripción del ejercicio con st.markdown()
     st.markdown("""
-    Este módulo implementa un ciclo de vida **CRUD (Crear, Leer, Actualizar, Eliminar)** interactuando con la clase `InventarioProducto` de nuestra librería externa.
-    Cada fila registrada se gestiona como un objeto de software individual, encapsulando sus propios atributos y métodos de cálculo.
+    Este módulo implementa un ciclo de vida **CRUD (Crear, Leer, Actualizar, Eliminar)** interactuando con la clase `InventarioProducto` 
+    de la librería externa `libreria_funciones_proyecto1.py`. Cada fila registrada se gestiona como un objeto de software individual, 
+    encapsulando sus propios atributos y métodos de cálculo.
     """)
     st.divider()
 
