@@ -47,11 +47,11 @@ if opcion == "Home":
         # Breve descripción del proyecto
         st.markdown("### 📝 Descripción del Proyecto")
         st.write(
-            "Este proyecto consiste en una aplicación web interactiva diseñada para centralizar, "
-            "ejecutar y validar de forma práctica los pilares fundamentales del lenguaje Python. "
-            "A través de una arquitectura limpia y modular, el portafolio actúa como evidencia "
-            "de ingeniería de software, permitiendo al usuario interactuar en tiempo real con "
-            "algoritmos complejos, manipulación de datos y metodologías de programación avanzadas."
+            "Esta es una aplicación interactiva diseñada para demostrar el dominio de los fundamentos de "
+            "Python. A través de una interfaz visual limpia y amigable, la app unifica conceptos clave del "
+            "lenguaje —desde variables y estructuras de datos hasta programación funcional y orientada a "
+            "objetos (POO)— en herramientas prácticas y funcionales que el usuario puede probar en "
+            "tiempo real."
         )
         
         # Tecnologías utilizadas
