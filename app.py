@@ -388,7 +388,7 @@ elif opcion == "Ejercicio 4":
         import libreria_clases_proyecto1 as lib_clases
     except ModuleNotFoundError:
         # Respaldo de contingencia por si el archivo tarda en sincronizar con el servidor
-        class InventarioProducto:
+        class InventarioProductoContingencia:
             def __init__(self, nombre, costo_unitario, precio_unitario, stock_actual, stock_minimo):
                 self.nombre = nombre
                 self.costo_unitario = costo_unitario
